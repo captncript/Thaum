@@ -3,13 +3,16 @@ package com.Captn.research;
 public class Aspect
 {
 	String strElement = new String("");
-	Integer sizeOfPath = 0;
-	Integer pathLevel = 0;
+	String[] strPath;
+	String[] arrayOfConnections;
+	int sizeOfPath = 0;
+	int pathLevel = 0;
 	
 	public Aspect(String strElement, int sizeOfPath)
 	{
 		this.strElement = strElement;
 		this.sizeOfPath = sizeOfPath;
+		this.strPath = new String[sizeOfPath];
 	}
 	
 	public String[] nextElement()
@@ -329,21 +332,26 @@ public class Aspect
 		return strElements;
 	}
 
+	public void writeArray()
+	{
+		
+	}
+	
 	public void loadArray()
 	{
 		//this will get called with the assigned values above
-		String[] arrayOfConnections = nextElement();
+		arrayOfConnections = nextElement();
 		pathLevel += 1;
 		
 		for (int j=0; j < arrayOfConnections.length; j++)
 		{
-			array[pathLevel] = arrayOfConnections[j];
+			strPath[pathLevel] = arrayOfConnections[j];
         	if (pathLevel == (sizeOfPath - 1))
 			{
-				writeArray(array, pathLevel);
+				writeArray();
         	} else
 			{
-				loadArray(array, pathLevel);
+				loadArray();
 			}
 		}
 		pathLevel -= 1;
