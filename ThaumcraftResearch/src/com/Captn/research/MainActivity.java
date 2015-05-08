@@ -16,13 +16,11 @@ public class MainActivity extends Activity
         setContentView(R.layout.main);
     }
 	
-	public String pathing(int intSteps)
+	public void pathing()
 	{
 		//this will return the |path from one element to the last over a given number of steps
-		String strFinal = "";
+		Aspect currentAspect;
 		String[] strElements = new String[51];
-		String[] strPath = new String[intSteps];
-		Array[] aryPaths;
 		
 		//Establishing array of all elements
 		strElements[0] = "aer";
@@ -78,13 +76,13 @@ public class MainActivity extends Activity
 		strElements[50] = "tutamen";
 		//--------------------------------------
 		
-		
-		for (int i=0; i<=2; i++)
+		for (int sizeOfPath=4; sizeOfPath<=12; sizeOfPath++)
 		{
-
+			for (int j=0; j<=50; j++)
+			{
+				currentAspect = new Aspect(strElements[j], sizeOfPath);
+			}
 		}
-		
-		return strFinal;
 	}
 }
 

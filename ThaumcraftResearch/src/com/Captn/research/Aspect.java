@@ -1,11 +1,22 @@
 package com.Captn.research;
 
-public class NextElements
+public class Aspect
 {
-	public String[] nextElement(String strElement)
+	String strElement = new String("");
+	Integer sizeOfPath = 0;
+	Integer pathLevel = 0;
+	
+	public Aspect(String strElement, int sizeOfPath)
+	{
+		this.strElement = strElement;
+		this.sizeOfPath = sizeOfPath;
+	}
+	
+	public String[] nextElement()
 	{
 		String[] strElements = new String[10]; //The group of elements that can connect to a given element will be stored here.
-
+		String strElement = this.strElement;
+		
 		if (strElement.equals("aer"))
 		{
 			strElements[0] = "lux";
@@ -217,8 +228,124 @@ public class NextElements
 		{
 			strElements[0] = "motus";
 			strElements[1] = "mortuus";
+		} else if (strElement.equals("herba"))
+		{
+			strElements[0] = "granum";
+			strElements[1] = "terra";
+			strElements[2] = "victus";
+			strElements[3] = "arbor";
+			strElements[4] = "messis";
+		} else if (strElement.equals("spiritus"))
+		{
+			strElements[0] = "victus";
+			strElements[1] = "mortuus";
+			strElements[2] = "cognitio";
+			strElements[3] = "sensus";
+		} else if (strElement.equals("venenum"))
+		{
+			strElements[0] = "aqua";
+			strElements[1] = "mortuus";
+		} else if (strElement.equals("vitium"))
+		{
+			strElements[0] = "praecantatio";
+			strElements[1] = "perditio";
+		} else if (strElement.equals("arbor"))
+		{
+			strElements[0] = "terra";
+			strElements[1] = "herba";
+			strElements[2] = "aer";
+		} else if (strElement.equals("cognitio"))
+		{
+			strElements[0] = "terra";
+			strElements[1] = "spiritus";
+			strElements[2] = "humanus";
+		} else if (strElement.equals("sensus"))
+		{
+			strElements[0] = "aer";
+			strElements[1] = "spiritus";
+		} else if (strElement.equals("humanus"))
+		{
+			strElements[0] = "bestia";
+			strElements[1] = "cognitio";
+			strElements[2] = "instrumentum";
+			strElements[3] = "lucrum";
+			strElements[4] = "messis";
+			strElements[5] = "perfodio";
+			strElements[6] = "fabrico";
+			strElements[7] = "meto";
+		} else if (strElement.equals("instrumentum"))
+		{
+			strElements[0] = "humanus";
+			strElements[1] = "metallum";
+			strElements[2] = "ordo";
+			strElements[3] = "fabrico";
+			strElements[4] = "machina";
+			strElements[5] = "meto";
+			strElements[6] = "pannus";
+			strElements[7] = "telum";
+			strElements[8] = "tutamen";
+		} else if (strElement.equals("lucrum"))
+		{
+			strElements[0] = "humanus";
+			strElements[1] = "fames";
+		} else if (strElement.equals("messis"))
+		{
+			strElements[0] = "granum";
+			strElements[1] = "humanus";
+			strElements[2] = "herba";
+			strElements[3] = "meto";
+		} else if (strElement.equals("perfodio"))
+		{
+			strElements[0] = "humanus";
+			strElements[1] = "saxum";
+			strElements[2] = "terra";
+		} else if (strElement.equals("fabrico"))
+		{
+			strElements[0] = "humanus";
+			strElements[1] = "instrumentum";
+		} else if (strElement.equals("machina"))
+		{
+			strElements[0] = "motus";
+			strElements[1] = "instrumentum";
+		} else if (strElement.equals("meto"))
+		{
+			strElements[0] = "messis";
+			strElements[1] = "humanus";
+			strElements[2] = "instrumentum";
+		} else if (strElement.equals("pannus"))
+		{
+			strElements[0] = "instrumentum";
+			strElements[1] = "bestia";
+		} else if (strElement.equals("telum"))
+		{
+			strElements[0] = "instrumentum";
+			strElements[1] = "perditio";
+		} else if (strElement.equals("tutamen"))
+		{
+			strElements[0] = "instrumentum";
+			strElements[0] = "terra";
 		}
 
 		return strElements;
+	}
+
+	public void loadArray()
+	{
+		//this will get called with the assigned values above
+		String[] arrayOfConnections = nextElement();
+		pathLevel += 1;
+		
+		for (int j=0; j < arrayOfConnections.length; j++)
+		{
+			array[pathLevel] = arrayOfConnections[j];
+        	if (pathLevel == (sizeOfPath - 1))
+			{
+				writeArray(array, pathLevel);
+        	} else
+			{
+				loadArray(array, pathLevel);
+			}
+		}
+		pathLevel -= 1;
 	}
 }
