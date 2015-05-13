@@ -341,16 +341,24 @@ public class Aspect
 
 	public void writeArray(FileWriter writer)
 	{
+		System.err.println("made it into writeArray");
 		String[] finalAspects = new String[10];
 		String strWritten = "";
+		System.err.println("Created array and final string variables");
+		try
+		{
 		finalAspects = nextElement(strPath[pathLevel]);
+		
+		System.err.println("Gathered Aspects for path end");
 		
 		for (int i = 0; i < finalAspects.length; i++)
 		{
+			System.err.println("Made it into output loop");
 			strPath[pathLevel] = finalAspects[i];
 			strWritten = "";
 			for (int j = 0; j < sizeOfPath; j++)
 			{
+				System.err.println("Building string");
 				strWritten = strWritten + "," + strPath[j];
 			}
 			try
@@ -362,10 +370,18 @@ public class Aspect
 				//put logging in here
 			}
 		}
+		} catch (Exception e)
+		{
+			System.err.println("Aspect being used: " + strPath[pathLevel]);
+			System.err.println("Path Level: " + pathLevel);
+			System.err.println("Path Size: " + sizeOfPath);
+			System.err.println(e);
+		}
 	}
 	
 	public void loadArray(FileWriter writer)
 	{
+		//System.err.println("loadArray called");
 		//setStringStarter needs to be called first
 		//this will get called with the assigned values above
 		arrayOfConnections = nextElement(strPath[pathLevel]);
@@ -374,16 +390,18 @@ public class Aspect
 		for (int j=0; j < arrayOfConnections.length; j++)
 		{
 			strPath[pathLevel] = arrayOfConnections[j];
-        	if (pathLevel == (sizeOfPath - 1))
+			//System.err.println("Gathered group of connections");
+        	if (pathLevel == (sizeOfPath - 2))
 			{
 				pathLevel++;
 				writeArray(writer);
+				System.err.println("Made it through writeArray");
 				pathLevel--;
         	} else
 			{
 				loadArray(writer);
 			}
 		}
-		pathLevel -= 1;
+		pathLevel--;
 	}
 }

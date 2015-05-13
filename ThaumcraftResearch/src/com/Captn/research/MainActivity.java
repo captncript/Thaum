@@ -29,7 +29,7 @@ public class MainActivity extends Activity
 	
 	public void pathing(View view)
 	{
-		System.err.println("Made it to pathing");
+		//System.err.println("Made it to pathing");
 		//this will return the |path from one element to the last over a given number of steps
 		Aspect currentAspect;
 		String[] strElements = new String[51];
@@ -118,12 +118,13 @@ public class MainActivity extends Activity
 				{
 					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects12");
 				}
-				System.err.println("Made it this far");
-				for (int j=0; j<=50; j++)
+				//System.err.println("Created a writer");
+				for (int j=0; j<=1; j++)
 				{
 					currentAspect = new Aspect(sizeOfPath);
-					System.err.println("created an aspect");
+					//System.err.println("Created an aspect");
 					currentAspect.setPathStarter(strElements[j]);
+					//System.err.println("Put aspect into path array");
 					currentAspect.loadArray(writer);
 				}
 			} catch(IOException e)
