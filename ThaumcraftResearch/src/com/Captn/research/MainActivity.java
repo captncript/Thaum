@@ -5,6 +5,7 @@ import android.os.*;
 import android.view.*;
 import android.widget.*;
 import java.sql.*;
+import java.io.*;
 
 public class MainActivity extends Activity
 {
@@ -14,13 +15,25 @@ public class MainActivity extends Activity
 	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+		
+		try
+		{
+			File file = new File("/storage/emulated/0/AppProjects/Thaum/error");
+			PrintStream ps = new PrintStream(file);
+			System.setErr(ps);
+		} catch (IOException e)
+		{
+			System.err.println("Error setting up reporting");
+		}
     }
 	
-	public void pathing()
+	public void pathing(View view)
 	{
+		System.err.println("Made it to pathing");
 		//this will return the |path from one element to the last over a given number of steps
 		Aspect currentAspect;
 		String[] strElements = new String[51];
+		FileWriter writer = null;
 		
 		//Establishing array of all elements
 		strElements[0] = "aer";
@@ -76,11 +89,60 @@ public class MainActivity extends Activity
 		strElements[50] = "tutamen";
 		//--------------------------------------
 		
-		for (int sizeOfPath=4; sizeOfPath<=12; sizeOfPath++)
+		for (int sizeOfPath=5; sizeOfPath<=12; sizeOfPath++)
 		{
-			for (int j=0; j<=50; j++)
+			try
 			{
-				currentAspect = new Aspect(strElements[j], sizeOfPath);
+				if (sizeOfPath == 5)
+				{
+					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects5");
+				} else if (sizeOfPath == 6)
+				{
+					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects6");
+				} else if (sizeOfPath == 7)
+				{
+					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects7");
+				} else if (sizeOfPath == 8)
+				{
+					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects8");
+				} else if (sizeOfPath == 9)
+				{
+					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects9");
+				} else if (sizeOfPath == 10)
+				{
+					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects10");
+				} else if (sizeOfPath == 11)
+				{
+					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects11");
+				} else if (sizeOfPath == 12)
+				{
+					writer = new FileWriter("/storage/emulated/0/AppProjects/Thaum/Aspects12");
+				}
+				System.err.println("Made it this far");
+				for (int j=0; j<=50; j++)
+				{
+					currentAspect = new Aspect(sizeOfPath);
+					System.err.println("created an aspect");
+					currentAspect.setPathStarter(strElements[j]);
+					currentAspect.loadArray(writer);
+				}
+			} catch(IOException e)
+			{
+				System.err.println(e);
+				//Put logging in here
+			} finally
+			{
+				try
+				{
+					if (writer != null) 
+					{
+						writer.close();
+					}
+				} catch (IOException ex)
+				{
+					System.err.println(ex);
+					//put some logging in here for practice
+				}
 			}
 		}
 	}

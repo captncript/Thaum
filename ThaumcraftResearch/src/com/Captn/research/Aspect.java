@@ -1,4 +1,5 @@
 package com.Captn.research;
+import java.io.*;
 
 public class Aspect
 {
@@ -7,18 +8,24 @@ public class Aspect
 	String[] arrayOfConnections;
 	int sizeOfPath = 0;
 	int pathLevel = 0;
+	FileWriter writer = null;
 	
-	public Aspect(String strElement, int sizeOfPath)
+	public Aspect(int sizeOfPath)
 	{
-		this.strElement = strElement;
 		this.sizeOfPath = sizeOfPath;
 		this.strPath = new String[sizeOfPath];
 	}
 	
-	public String[] nextElement()
+	public void setPathStarter(String firstAspect)
+	{
+		//This needs to be called before loadArray
+		this.strPath[0] = firstAspect;
+		this.pathLevel = 0;
+	}
+	
+	public String[] nextElement(String strElement)
 	{
 		String[] strElements = new String[10]; //The group of elements that can connect to a given element will be stored here.
-		String strElement = this.strElement;
 		
 		if (strElement.equals("aer"))
 		{
@@ -332,15 +339,36 @@ public class Aspect
 		return strElements;
 	}
 
-	public void writeArray()
+	public void writeArray(FileWriter writer)
 	{
+		String[] finalAspects = new String[10];
+		String strWritten = "";
+		finalAspects = nextElement(strPath[pathLevel]);
 		
+		for (int i = 0; i < finalAspects.length; i++)
+		{
+			strPath[pathLevel] = finalAspects[i];
+			strWritten = "";
+			for (int j = 0; j < sizeOfPath; j++)
+			{
+				strWritten = strWritten + "," + strPath[j];
+			}
+			try
+			{
+				writer.append(strWritten);
+			} catch (IOException e)
+			{
+				System.err.println(e);
+				//put logging in here
+			}
+		}
 	}
 	
-	public void loadArray()
+	public void loadArray(FileWriter writer)
 	{
+		//setStringStarter needs to be called first
 		//this will get called with the assigned values above
-		arrayOfConnections = nextElement();
+		arrayOfConnections = nextElement(strPath[pathLevel]);
 		pathLevel += 1;
 		
 		for (int j=0; j < arrayOfConnections.length; j++)
@@ -348,10 +376,12 @@ public class Aspect
 			strPath[pathLevel] = arrayOfConnections[j];
         	if (pathLevel == (sizeOfPath - 1))
 			{
-				writeArray();
+				pathLevel++;
+				writeArray(writer);
+				pathLevel--;
         	} else
 			{
-				loadArray();
+				loadArray(writer);
 			}
 		}
 		pathLevel -= 1;
