@@ -341,41 +341,64 @@ public class Aspect
 
 	public void writeArray(FileWriter writer)
 	{
-		System.err.println("made it into writeArray");
+		//System.err.println("made it into writeArray");
 		String[] finalAspects = new String[10];
 		String strWritten = "";
-		System.err.println("Created array and final string variables");
+		boolean toBeWritten = true;
+		//System.err.println("Created array and final string variables");
+		
+		finalAspects = nextElement(strPath[(pathLevel-1)]);
+
+		//System.err.println("Gathered Aspects for path end");
+		
 		try
 		{
-		finalAspects = nextElement(strPath[pathLevel]);
-		
-		System.err.println("Gathered Aspects for path end");
-		
-		for (int i = 0; i < finalAspects.length; i++)
-		{
-			System.err.println("Made it into output loop");
-			strPath[pathLevel] = finalAspects[i];
-			strWritten = "";
-			for (int j = 0; j < sizeOfPath; j++)
+			for (int i = 0; i < finalAspects.length; i++)
 			{
-				System.err.println("Building string");
-				strWritten = strWritten + "," + strPath[j];
+				//System.err.println("Made it into output loop");
+				strPath[pathLevel] = finalAspects[i];
+				strWritten = "";
+				for (int j = 0; j < sizeOfPath; j++)
+				{
+					if (strPath[j].equals(null))
+					{
+						toBeWritten = false;
+						continue;
+					} else
+					{
+						System.err.println("aspect: " + strPath[j]);
+						if (strWritten.equals(""))
+						{
+							toBeWritten = true;
+							strWritten = strPath[j];
+						} else
+						{
+							strWritten += "," + strPath[j];
+						}
+					}
+				}
+				try
+				{
+					if (toBeWritten)
+					{
+						strWritten += "\n";
+						writer.append(strWritten);
+						strWritten = "";
+					}
+				} catch (IOException e)
+				{
+					System.err.println(e);
+				}
 			}
-			try
-			{
-				writer.append(strWritten);
-			} catch (IOException e)
-			{
-				System.err.println(e);
-				//put logging in here
-			}
-		}
 		} catch (Exception e)
 		{
-			System.err.println("Aspect being used: " + strPath[pathLevel]);
-			System.err.println("Path Level: " + pathLevel);
-			System.err.println("Path Size: " + sizeOfPath);
+			System.err.println("Aspect being used: " + strPath[(pathLevel-1)]);
+			System.err.println("Last Aspect: " + strPath[(pathLevel)]);
+			//System.err.println("Path Level: " + pathLevel);
+			//System.err.println("Path Size: " + sizeOfPath);
+			//System.err.println("Is this supposed to be written: " + toBeWritten);
 			System.err.println(e);
+			//System.exit(1);
 		}
 	}
 	
@@ -395,7 +418,7 @@ public class Aspect
 			{
 				pathLevel++;
 				writeArray(writer);
-				System.err.println("Made it through writeArray");
+				//System.err.println("Made it through writeArray");
 				pathLevel--;
         	} else
 			{
