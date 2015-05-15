@@ -5,15 +5,16 @@ public class Aspect
 {
 	String strElement = new String("");
 	String[] strPath;
-	String[] arrayOfConnections;
+	String[][] arrayOfConnections;
 	int sizeOfPath = 0;
 	int pathLevel = 0;
-	FileWriter writer = null;
+	BufferedWriter writer = null;
 	
 	public Aspect(int sizeOfPath)
 	{
 		this.sizeOfPath = sizeOfPath;
 		this.strPath = new String[sizeOfPath];
+		arrayOfConnections = new String[12][10];
 	}
 	
 	public void setPathStarter(String firstAspect)
@@ -26,7 +27,7 @@ public class Aspect
 	public String[] nextElement(String strElement)
 	{
 		String[] strElements = new String[10]; //The group of elements that can connect to a given element will be stored here.
-		
+		//System.err.println(strElement);
 		if (strElement.equals("aer"))
 		{
 			strElements[0] = "lux";
@@ -339,38 +340,50 @@ public class Aspect
 		return strElements;
 	}
 
-	public void writeArray(FileWriter writer)
+	public void writeArray(BufferedWriter writer)
 	{
 		//System.err.println("made it into writeArray");
 		String[] finalAspects = new String[10];
 		String strWritten = "";
 		boolean toBeWritten = true;
 		//System.err.println("Created array and final string variables");
-		
-		finalAspects = nextElement(strPath[(pathLevel-1)]);
-
+		if (strPath[(pathLevel-1)] != null)
+		{
+			finalAspects = nextElement(strPath[(pathLevel-1)]);
+		}
 		//System.err.println("Gathered Aspects for path end");
 		
 		try
 		{
-			for (int i = 0; i < finalAspects.length; i++)
+			for (int i = 0; i < 10; i++)
 			{
 				//System.err.println("Made it into output loop");
-				strPath[pathLevel] = finalAspects[i];
+				if (finalAspects[i] != null)
+				{
+					toBeWritten = true;
+					strPath[pathLevel] = finalAspects[i];
+				} else
+				{
+					toBeWritten = false;
+					continue;
+				}
 				strWritten = "";
 				for (int j = 0; j < sizeOfPath; j++)
 				{
-					if (strPath[j].equals(null))
+					if (strPath[j] == null)
 					{
 						toBeWritten = false;
 						continue;
 					} else
 					{
-						System.err.println("aspect: " + strPath[j]);
-						if (strWritten.equals(""))
+						//System.err.println("aspect: " + strPath[j]);
+						if (strWritten == null || strWritten.equals(""))
 						{
-							toBeWritten = true;
 							strWritten = strPath[j];
+							if (strWritten.equals(""))
+							{
+								toBeWritten = false;
+							}
 						} else
 						{
 							strWritten += "," + strPath[j];
@@ -382,8 +395,12 @@ public class Aspect
 					if (toBeWritten)
 					{
 						strWritten += "\n";
-						writer.append(strWritten);
-						strWritten = "";
+						if (strWritten != null || !strWritten.equals(""))
+						{
+							//System.err.println("about to append string: " + strWritten);
+							writer.append(strWritten);
+							strWritten = "";
+						}
 					}
 				} catch (IOException e)
 				{
@@ -394,6 +411,7 @@ public class Aspect
 		{
 			System.err.println("Aspect being used: " + strPath[(pathLevel-1)]);
 			System.err.println("Last Aspect: " + strPath[(pathLevel)]);
+			//System.err.println("strWritten: " + strWritten);
 			//System.err.println("Path Level: " + pathLevel);
 			//System.err.println("Path Size: " + sizeOfPath);
 			//System.err.println("Is this supposed to be written: " + toBeWritten);
@@ -402,17 +420,35 @@ public class Aspect
 		}
 	}
 	
-	public void loadArray(FileWriter writer)
+	public void loadArray(BufferedWriter writer)
 	{
+		try
+		{
 		//System.err.println("loadArray called");
 		//setStringStarter needs to be called first
 		//this will get called with the assigned values above
-		arrayOfConnections = nextElement(strPath[pathLevel]);
+		try
+		{
+			if (strPath[pathLevel] != null)
+			{
+				arrayOfConnections[pathLevel] = nextElement(strPath[pathLevel]);
+			}
+			//System.err.println(arrayOfConnections[pathLevel][1]);
+		} catch (Exception ex)
+		{
+			System.err.println("path level: " + pathLevel);
+			System.err.println("Current aspect: " + strPath[pathLevel]);
+			System.err.println(ex);
+		}
+		
 		pathLevel += 1;
 		
-		for (int j=0; j < arrayOfConnections.length; j++)
+		for (int j=0; j < 10; j++)
 		{
-			strPath[pathLevel] = arrayOfConnections[j];
+			strPath[pathLevel] = arrayOfConnections[(pathLevel-1)][j];
+			//System.err.println("path Level: " + pathLevel);
+			//System.err.println("j :" + j);
+			//System.err.println("array value: " + arrayOfConnections[pathLevel][j]);
 			//System.err.println("Gathered group of connections");
         	if (pathLevel == (sizeOfPath - 2))
 			{
@@ -426,5 +462,10 @@ public class Aspect
 			}
 		}
 		pathLevel--;
-	}
+		} catch (Exception exc)
+		{
+			System.err.println(exc);
+			System.exit(1);
+		}
+	} 
 }
